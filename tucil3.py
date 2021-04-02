@@ -36,39 +36,6 @@ class Graph():
                     print(self.nodes[i], end=" ")
                 print(self.adj_matrix[i][j], end=" ")
             print()
-            """
-    def BFS(self, s):
-        edge_list = []
-        for i in (self.nodes):
-            for j in (self.nodes):
-                if (i != j):
-                    edge_list.append((i,j))
-                        
-        visited = [False] * (nNodes+1)
-        queue = []
- 
-        # Mark the source node as
-        # visited and enqueue it
-        queue.append(s)
-        visited[s] = True
- 
-        while queue:
- 
-            # Dequeue a vertex from
-            # queue and print it
-            s = queue.pop(0)
-            print (s, end = " ")
- 
-            # Get all adjacent vertices of the
-            # dequeued vertex s. If a adjacent
-            # has not been visited, then mark it
-            # visited and enqueue it
-            
-            for i in edge_list[s]:
-                if visited[i] == False:
-                    queue.append(i)
-                    visited[i] = True
-                    """
 
 def add_graph_from_txt(g, nodeCoordinate, file):
     nodeCoordinate = []
