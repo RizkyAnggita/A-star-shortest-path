@@ -96,7 +96,7 @@ def euclidean_dist(pointA, pointB):
     return math.sqrt(xKuad + yKuad)
 
 # filename = input("Masukkan nama file: ")
-filename = "input2.txt"
+filename = "input1.txt"
 a = os.path.abspath(os.curdir)
 
 
@@ -143,7 +143,7 @@ print("Element ke-", FromNode, "dan", ToNode)#TestPrint
 #temp_Hn = euclidean_dist(nodeCoordinate[FromNode], nodeCoordinate[ToNode])
 
 #Hn Gn nya belom, prionya masih 0 semua ini
-def BFS (g, From, To):
+def AStar (g, From, To):
     #untuk mendapat yang belom ditelusuri
     def getAdjUnvisited(visitedVertices):
         for i in range(len(g.nodes)):
@@ -179,38 +179,47 @@ def BFS (g, From, To):
         #print(currNode[-1])
         From = str(currNode[-1])
         idxFrom = SearchIdxNode(From)
-        
+        print(currNode)
+        #G(n) : jarak yang telah ditempuh sampai ke simpul tersebut
+        Gn = 0
+        for i in range(len(currNode)-1):
+            a = SearchIdxNode(currNode[i])
+            b = SearchIdxNode(currNode[i+1])
+            Gn += g.adj_matrix[a][b]
+        print("G(n):",Gn)
+        #H(n) : jarak garis lurus titik sekarang ke tujuan
+        Hn = euclidean_dist(nodeCoordinate[SearchIdxNode(currNode[-1])], nodeCoordinate[SearchIdxNode(To)])
+        print("H(n):",Hn)
+
+        Fn = Gn + Hn
+        print("F(n):", Fn)
         idxUnv = getAdjUnvisited(visitedVertices)
         print("Indeks:", idxUnv)
         if (getAdjUnvisited(visitedVertices) != -1):
-            #H(n) : jarak garis lurus titik sekarang ke tujuan
-            #temp_Hn = euclidean_dist(nodeCoordinate[SearchIdxNode(currNode[-1])], nodeCoordinate[SearchIdxNode(To)])
-            q.put((2, temp[1]+'-'+(g.nodes[idxUnv])))
+            q.put((Fn, temp[1]+'-'+(g.nodes[idxUnv])))
             visitedVertices[idxUnv] = True
             Pembangkit[idxUnv] = True
-            if(idxUnv == idxTo):
+            if(SearchIdxNode(currNode[-1]) == idxTo):
                 print("KETEMU")
                 #print(q.get())
                 pathFound = True
         while(idxUnv != -1 and not pathFound):
             idxUnv = getAdjUnvisited(visitedVertices)
             if (getAdjUnvisited(visitedVertices) != -1):
-                q.put((2, temp[1]+'-'+(g.nodes[idxUnv])))
+                q.put((Fn, temp[1]+'-'+(g.nodes[idxUnv])))
                 visitedVertices[idxUnv] = True
                 Pembangkit[idxUnv] = True
-                if(idxUnv == idxTo):
+                if(SearchIdxNode(currNode[-1]) == idxTo):
                     print(q.get())
                     print("KETEMUBWAH")
                     pathFound = True
-            #print(visitedVertices)
-        print("TEST LOOP:" )
-        print("")
-        print(pathFound)
-        print(q.empty())
-        print(visitedVertices)
+        #print(pathFound)
+        #print(q.empty())
+        #print(visitedVertices)
+    print(currNode)
     
     
-BFS(g2, 'A', 'E')
+AStar(g2, 'A', 'E')
 
 #q = PriorityQueue()
 #q.put((1, 'From'))
