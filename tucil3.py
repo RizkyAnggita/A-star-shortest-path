@@ -96,7 +96,7 @@ def euclidean_dist(pointA, pointB):
     return math.sqrt(xKuad + yKuad)
 
 # filename = input("Masukkan nama file: ")
-filename = "input1.txt"
+filename = "input2.txt"
 a = os.path.abspath(os.curdir)
 
 
@@ -126,21 +126,6 @@ a = euclidean_dist(nodeCoordinate[0], nodeCoordinate[1])
 print(a)
 
 """
-#print(nodeCoordinate)
-#print(g2.nodes)
-#print(g2.adj_matrix[0])
-"""
-From = input(str())
-To = input(str())
-#Dapetin node ke brp From sama To (asumsi node From dan To ada)
-for i in range (len(g2.nodes)):
-    if (From == g2.nodes[i]):
-        FromNode = i
-    if (To == g2.nodes[i]):
-        ToNode = i
-print("Element ke-", FromNode, "dan", ToNode)#TestPrint
-"""
-#temp_Hn = euclidean_dist(nodeCoordinate[FromNode], nodeCoordinate[ToNode])
 
 #Hn Gn nya belom, prionya masih 0 semua ini
 def AStar (g, From, To):
@@ -150,7 +135,15 @@ def AStar (g, From, To):
             if (g.adj_matrix[idxFrom][i] > 0 and visitedVertices[i] == False):
                 return (i)
         return -1
-
+    
+    def newVisitedVertices():
+        newVisitedVertices = [False for i in range(len(g.nodes))]
+        
+        for i in range (len(currNode)):
+            newVisitedVertices[SearchIdxNode(currNode[i])] = True
+        #print(visitedVertices)
+        return newVisitedVertices
+    
     def SearchIdxNode(N):
         for i in range(len(g.nodes)):
             if (N == g.nodes[i]):
@@ -175,7 +168,7 @@ def AStar (g, From, To):
         print("LOOP BESAR")
         temp = q.get()
         currNode = temp[1].split('-')
-        print(temp[1])
+        print("temp[1]:",temp[1])
         #print(currNode[-1])
         From = str(currNode[-1])
         idxFrom = SearchIdxNode(From)
@@ -193,8 +186,13 @@ def AStar (g, From, To):
 
         Fn = Gn + Hn
         print("F(n):", Fn)
+
+        visitedVertices = newVisitedVertices()
+        print(visitedVertices)
+
         idxUnv = getAdjUnvisited(visitedVertices)
         print("Indeks:", idxUnv)
+        
         if (getAdjUnvisited(visitedVertices) != -1):
             q.put((Fn, temp[1]+'-'+(g.nodes[idxUnv])))
             visitedVertices[idxUnv] = True
@@ -213,15 +211,11 @@ def AStar (g, From, To):
                     print(q.get())
                     print("KETEMUBWAH")
                     pathFound = True
-        #print(pathFound)
-        #print(q.empty())
-        #print(visitedVertices)
     print(currNode)
     
-    
-AStar(g2, 'A', 'E')
 
-#q = PriorityQueue()
-#q.put((1, 'From'))
 
+From = input(str("Asal:"))
+To = input(str("Tujuan:"))
+AStar(g2, From, To)
 
