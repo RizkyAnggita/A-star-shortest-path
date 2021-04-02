@@ -1,9 +1,10 @@
 import os
 import math
+from queue import PriorityQueue
 class Graph():
     def __init__(self, nNodes):
         self.nodes = []
-        self.adj_matrix = [] 
+        self.adj_matrix = []
 
         # Initialize Weighted Graph Adjacency Matrix
         for i in range(nNodes):
@@ -35,6 +36,39 @@ class Graph():
                     print(self.nodes[i], end=" ")
                 print(self.adj_matrix[i][j], end=" ")
             print()
+            """
+    def BFS(self, s):
+        edge_list = []
+        for i in (self.nodes):
+            for j in (self.nodes):
+                if (i != j):
+                    edge_list.append((i,j))
+                        
+        visited = [False] * (nNodes+1)
+        queue = []
+ 
+        # Mark the source node as
+        # visited and enqueue it
+        queue.append(s)
+        visited[s] = True
+ 
+        while queue:
+ 
+            # Dequeue a vertex from
+            # queue and print it
+            s = queue.pop(0)
+            print (s, end = " ")
+ 
+            # Get all adjacent vertices of the
+            # dequeued vertex s. If a adjacent
+            # has not been visited, then mark it
+            # visited and enqueue it
+            
+            for i in edge_list[s]:
+                if visited[i] == False:
+                    queue.append(i)
+                    visited[i] = True
+                    """
 
 def add_graph_from_txt(g, nodeCoordinate, file):
     nodeCoordinate = []
@@ -78,7 +112,7 @@ nNodes = int(f.readline())
 nodeCoordinate = []
 g2 = Graph(nNodes)
 nodeCoordinate = add_graph_from_txt(g2, nodeCoordinate, f)
-
+"""
 print("\nGRAPH: ")
 g2.print_graph()
 print()
@@ -90,3 +124,73 @@ print(nodeCoordinate[1])
 # Penggunaan euclidean_dist dan nodeCoordinate
 a = euclidean_dist(nodeCoordinate[0], nodeCoordinate[1])
 print(a)
+
+"""
+print(nodeCoordinate)
+print(g2.nodes)
+print(g2.adj_matrix[0])
+Test = []
+"""
+From = input(str())
+To = input(str())
+#Dapetin node ke brp From sama To (asumsi node From dan To ada)
+for i in range (len(g2.nodes)):
+    if (From == g2.nodes[i]):
+        FromNode = i
+    if (To == g2.nodes[i]):
+        ToNode = i
+print("Element ke-", FromNode, "dan", ToNode)#TestPrint
+"""
+#temp_Hn = euclidean_dist(nodeCoordinate[FromNode], nodeCoordinate[ToNode])
+
+#Hn Gn nya belom, prionya masih 0 semua ini
+def BFS (g, From, To):
+    #untuk mendapat yang belom ditelusuri
+    def getAdjUnvisited():
+        for i in range(len(g.nodes)):
+            if (g.adj_matrix[idxFrom][i] > 0 and visitedVertices[i] == False):
+                return (i)
+    idxFrom = -1
+    idxTo = -1
+    pathFound = False
+    visitedVertices = [False for i in range (len(g.nodes))]
+    q = PriorityQueue()
+    for i in range (len(g.nodes)):
+        if (From == g.nodes[i]):
+            idxFrom = i
+        if (To == g.nodes[i]):
+            idxTo = i
+    visitedVertices[idxFrom] = True
+    q.put((0, From))
+
+    Pembangkit = [0 for i in range (len(g.nodes))]
+    while(not q.empty() and not pathFound):
+        temp = q.get()
+        print(temp[0])
+        print(temp[1])
+        idxUnv = getAdjUnvisited()
+        if (getAdjUnvisited() != -1):
+            q.put((2, temp[1]+'-'+(g.nodes[idxUnv])))
+            visitedVertices[idxUnv] = True
+            Pembangkit[idxUnv] = True
+            if(idxUnv == idxTo):
+                #print(q.get())
+                pathFound = True
+        while(idxUnv != -1 and not pathFound):
+            idxUnv = getAdjUnvisited()
+            if (getAdjUnvisited() != -1):
+                q.put((2, temp[1]+'-'+(g.nodes[idxUnv])))
+                visitedVertices[idxUnv] = True
+                Pembangkit[idxUnv] = True
+                if(idxUnv == idxTo):
+                    #print(q.get())
+                    pathFound = True
+    
+    
+    
+BFS(g2, 'A', 'B')
+
+#q = PriorityQueue()
+#q.put((1, 'From'))
+
+
