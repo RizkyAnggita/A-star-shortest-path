@@ -1,5 +1,6 @@
 import os
 import math
+import queue
 from queue import PriorityQueue
 class Graph():
     def __init__(self, nNodes):
@@ -186,3 +187,84 @@ From = input(str("Asal:"))
 To = input(str("Tujuan:"))
 AStar(g2, From, To)
 
+
+def isInPrioQueue(prioQueue, node):
+    for item in prioQueue.queue:
+        if(item[1] == node):
+            return True
+    return False
+openSet = queue.PriorityQueue()
+path = []
+
+# titikA = nodeCoordinate[g2.nodes.index("A")]
+# titikB = nodeCoordinate[g2.nodes.index("B")]
+# titikC = nodeCoordinate[g2.nodes.index("C")]
+# titikD = nodeCoordinate[g2.nodes.index("D")]
+# titikE = nodeCoordinate[g2.nodes.index("E")]
+
+idxFrom = g2.nodes.index(From)
+idxTo = g2.nodes.index(To)
+
+f2 = 0 + euclidean_dist(nodeCoordinate[idxFrom], nodeCoordinate[idxTo])
+openSet.put((f2, From))
+
+# // For node n, gScore[n] is the cost of the cheapest path from start to n currently known.
+gScore = []
+
+# // For node n, fScore[n] := gScore[n] + h(n). fScore[n] represents our current best guess as to
+# // how short a path from start to finish can be if it goes through n.
+fScore = []
+cameFrom = []
+
+for node in g2.nodes:
+    if (node==From):
+        gScore.append(0)
+        fScore.append(euclidean_dist(nodeCoordinate[idxFrom], nodeCoordinate[idxTo]))
+    else:
+        gScore.append(999)
+        fScore.append(999)
+    cameFrom.append("")
+
+g2.print_graph()
+while (not openSet.empty()):
+    print("Kondisi PrioQueue: ", end ="")
+    print(openSet.queue)
+    current = openSet.get()
+    currentIdx = g2.nodes.index(current[1])
+    print("Current Node:" + g2.nodes[currentIdx])
+    if(current[1] == To):
+        print("DONE")
+        break
+    print()
+    # Foreach neighbour of current
+    # neighbour is every node that connected with current node
+    # with weight > 0
+    for i in range(nNodes):
+        if (g2.adj_matrix[currentIdx][i] > 0):
+            #  tentative_gScore is the distance from start to the neighbor through current
+            # d jarak dari node current ke tetangganya (weigthnya)
+            d = g2.adj_matrix[currentIdx][i]
+            tentative_gScore = gScore[currentIdx] + d
+            
+            # kalau kita mengunjungi node yang sama dua kali, kita cek apakah gScore node ini
+            # lebih pendek jika dibandingkan dengan tentative_gscore, yaitu dikunjungi melalui node lain
+        
+            if (tentative_gScore < gScore[i]):
+                cameFrom[i] = current[1]
+                gScore[i] = tentative_gScore
+                titikNeighbour = nodeCoordinate[i]
+                hn = euclidean_dist(titikNeighbour, nodeCoordinate[idxTo])
+                fScore[i] = gScore[i] + hn
+
+                if not (isInPrioQueue(openSet, g2.nodes[i])):
+                    openSet.put((fScore[i], g2.nodes[i]))
+
+for i in range(5):
+    print(euclidean_dist(nodeCoordinate[i], nodeCoordinate[4]))
+
+print(openSet.queue)
+# Ini tinggal di traceback gitu
+print("Tinggal di-traceback dari node tujuan ke awal")
+print(cameFrom)
+
+print("Jarak : " , gScore[idxTo])
