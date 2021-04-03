@@ -44,7 +44,7 @@ def add_graph_from_txt(g, nodeCoordinate, file):
     for i in range (nNodes):
         temp = file.readline()
         temp = temp.rsplit(" ")
-        nodeCoordinate.append((int(temp[0]), int(temp[1])))
+        nodeCoordinate.append((float(temp[0]), float(temp[1])))
         g.add_node(temp[2].rstrip("\n"))
 
     for i in range (nNodes):
@@ -52,7 +52,7 @@ def add_graph_from_txt(g, nodeCoordinate, file):
         temp = file.readline().rsplit(" ")
         
         for weight in temp:
-            g.add_edge(g.nodes[i], g.nodes[j], int(temp[j].rstrip("\n")))
+            g.add_edge(g.nodes[i], g.nodes[j], float(temp[j].rstrip("\n")))
             j+= 1
     
     return nodeCoordinate
@@ -76,7 +76,7 @@ def euclidean_dist(pointA, pointB):
     return math.sqrt(xKuad + yKuad)
 
 # filename = input("Masukkan nama file: ")
-filename = "input2.txt"
+filename = "BuahBatu.txt"
 a = os.path.abspath(os.curdir)
 
 
@@ -199,7 +199,9 @@ From = input(str("Asal:"))
 To = input(str("Tujuan:"))
 AStar(g2, From, To)
 
-
+print("KODE VERSI 2")
+print()
+print()
 def isInPrioQueue(prioQueue, node):
     for item in prioQueue.queue:
         if(item[1] == node):
