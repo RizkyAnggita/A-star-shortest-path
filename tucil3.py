@@ -57,6 +57,18 @@ def add_graph_from_txt(g, nodeCoordinate, file):
     
     return nodeCoordinate
 
+def rad (x):
+    return x*math.pi / 180
+
+def haversin (p1, p2):
+    R = 6378137 #Radius Bumi dalam meter
+    dLat = rad(p2[0] - p1[0])
+    dLong = rad(p2[1] - p1[1])
+    a = (math.sin (dLat / 2))**2 + math.cos (rad(p1[0])) * math.cos (rad(p2[0])) * (math.sin(dLong / 2))**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    res = R * c
+    return res
+
 def euclidean_dist(pointA, pointB):
     # Menghitung jarak dua buah titik
     xKuad = (pointA[0] - pointB[0])**2
@@ -149,7 +161,7 @@ def AStar (g, From, To):
             Gn += g.adj_matrix[a][b]
         print("G(n):",Gn)
         #H(n) : jarak garis lurus titik sekarang ke tujuan
-        Hn = euclidean_dist(nodeCoordinate[SearchIdxNode(currNode[-1])], nodeCoordinate[SearchIdxNode(To)])
+        Hn = haversin(nodeCoordinate[SearchIdxNode(currNode[-1])], nodeCoordinate[SearchIdxNode(To)])
         print("H(n):",Hn)
 
         Fn = Gn + Hn
@@ -205,7 +217,7 @@ path = []
 idxFrom = g2.nodes.index(From)
 idxTo = g2.nodes.index(To)
 
-f2 = 0 + euclidean_dist(nodeCoordinate[idxFrom], nodeCoordinate[idxTo])
+f2 = 0 + haversin(nodeCoordinate[idxFrom], nodeCoordinate[idxTo])
 openSet.put((f2, From))
 
 # // For node n, gScore[n] is the cost of the cheapest path from start to n currently known.
@@ -219,7 +231,7 @@ cameFrom = []
 for node in g2.nodes:
     if (node==From):
         gScore.append(0)
-        fScore.append(euclidean_dist(nodeCoordinate[idxFrom], nodeCoordinate[idxTo]))
+        fScore.append(haversin(nodeCoordinate[idxFrom], nodeCoordinate[idxTo]))
     else:
         gScore.append(999)
         fScore.append(999)
@@ -253,14 +265,14 @@ while (not openSet.empty()):
                 cameFrom[i] = current[1]
                 gScore[i] = tentative_gScore
                 titikNeighbour = nodeCoordinate[i]
-                hn = euclidean_dist(titikNeighbour, nodeCoordinate[idxTo])
+                hn = haversin(titikNeighbour, nodeCoordinate[idxTo])
                 fScore[i] = gScore[i] + hn
 
                 if not (isInPrioQueue(openSet, g2.nodes[i])):
                     openSet.put((fScore[i], g2.nodes[i]))
 
 for i in range(5):
-    print(euclidean_dist(nodeCoordinate[i], nodeCoordinate[4]))
+    print(haversin(nodeCoordinate[i], nodeCoordinate[4]))
 
 print(openSet.queue)
 # Ini tinggal di traceback gitu
