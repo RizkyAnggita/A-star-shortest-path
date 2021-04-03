@@ -2,6 +2,15 @@ import os
 import math
 import queue
 from queue import PriorityQueue
+import numpy as np
+import matplotlib.pyplot as plt
+import networkx as nx
+
+# Install numpy -> pip3 install numpy
+# Install matplotlib -> pip3 install matplotlib
+# Install networkx -> pip3 install networkx
+# Install decorator v4.4.2 -> pip install decorator==4.4.2
+#  
 class Graph():
     def __init__(self, nNodes):
         self.nodes = []
@@ -75,6 +84,7 @@ def euclidean_dist(pointA, pointB):
     yKuad = (pointA[1] - pointB[1])**2
     return math.sqrt(xKuad + yKuad)
 
+
 # filename = input("Masukkan nama file: ")
 filename = "BuahBatu.txt"
 a = os.path.abspath(os.curdir)
@@ -92,20 +102,7 @@ nNodes = int(f.readline())
 nodeCoordinate = []
 g2 = Graph(nNodes)
 nodeCoordinate = add_graph_from_txt(g2, nodeCoordinate, f)
-"""
-print("\nGRAPH: ")
-g2.print_graph()
-print()
-print(nodeCoordinate)
-print()
-print(nodeCoordinate[0])
-print(nodeCoordinate[1])
 
-# Penggunaan euclidean_dist dan nodeCoordinate
-a = euclidean_dist(nodeCoordinate[0], nodeCoordinate[1])
-print(a)
-
-"""
 
 #Hn Gn nya belom, prionya masih 0 semua ini
 def AStar (g, From, To):
@@ -191,94 +188,139 @@ def AStar (g, From, To):
                     print(q.get())
                     print("KETEMUBWAH")
                     pathFound = True
-    print(currNode)
-    
+    return (currNode)
 
+def AStarV2(g, From, To):
+    def construct_path(cameFrom, From, To, g):
+        path = []
+        idxFrom = g.nodes.index(From)
+        idxTo = g.nodes.index(To)
+
+        i = idxTo
+        path.append(g.nodes[idxTo])
+        while(i != idxFrom):
+            print(i)
+            path.append(cameFrom[i])
+            i = g.nodes.index(cameFrom[i])
+        
+        path.reverse()
+        return path
+
+    def isInPrioQueue(prioQueue, node):
+        for item in prioQueue.queue:
+            if(item[1] == node):
+                return True
+        return False
+
+    openSet = queue.PriorityQueue()
+    idxFrom = g.nodes.index(From)
+    idxTo = g.nodes.index(To)
+
+    f2 = 0 + haversin(nodeCoordinate[idxFrom], nodeCoordinate[idxTo])
+    openSet.put((f2, From))
+
+    # // For node n, gScore[n] is the cost of the cheapest path from start to n currently known.
+    gScore = []
+
+    # // For node n, fScore[n] := gScore[n] + h(n). fScore[n] represents our current best guess as to
+    # // how short a path from start to finish can be if it goes through n.
+    fScore = []
+    cameFrom = []
+
+    for node in g2.nodes:
+        if (node==From):
+            gScore.append(0)
+            fScore.append(haversin(nodeCoordinate[idxFrom], nodeCoordinate[idxTo]))
+        else:
+            gScore.append(99999)
+            fScore.append(99999)
+        cameFrom.append("")
+
+    while (not openSet.empty()):
+        print("Kondisi PrioQueue: ", end ="")
+        print(openSet.queue)
+        current = openSet.get()
+        currentIdx = g.nodes.index(current[1])
+        print("Current Node:" + g.nodes[currentIdx])
+        if(current[1] == To):
+            print("DONE")
+            break
+        print()
+        # Foreach neighbour of current
+        # neighbour is every node that connected with current node
+        # with weight > 0
+        for i in range(nNodes):
+            if (g.adj_matrix[currentIdx][i] > 0):
+                #  tentative_gScore is the distance from start to the neighbor through current
+                # d jarak dari node current ke tetangganya (weigthnya)
+                d = g.adj_matrix[currentIdx][i]
+                tentative_gScore = gScore[currentIdx] + d
+                
+                # kalau kita mengunjungi node yang sama dua kali, kita cek apakah gScore node ini
+                # lebih pendek jika dibandingkan dengan tentative_gscore, yaitu dikunjungi melalui node lain
+            
+                if (tentative_gScore < gScore[i]):
+                    cameFrom[i] = current[1]
+                    gScore[i] = tentative_gScore
+                    titikNeighbour = nodeCoordinate[i]
+                    hn = haversin(titikNeighbour, nodeCoordinate[idxTo])
+                    fScore[i] = gScore[i] + hn
+
+                    if not (isInPrioQueue(openSet, g.nodes[i])):
+                        openSet.put((fScore[i], g.nodes[i]))
+
+    return construct_path(cameFrom, From, To, g), gScore
+    
+def visualize_graph(g2, solusi):
+
+    adj_np = np.array(g2.adj_matrix)
+    namaNode = g2.nodes
+    mylabels = {}
+    for i in range (len(namaNode)):
+        mylabels[i] = namaNode[i]
+ 
+    G = nx.from_numpy_matrix(adj_np, create_using=nx.DiGraph)
+    color_map = []
+    edge_colors = []    
+    solusi_idx = []
+
+    for i in range (len(solusi)):
+        a = g2.nodes.index(solusi[i])
+        solusi_idx.append(a)
+        
+    for node in G.nodes:
+        if node in solusi_idx:
+            color_map.append("green")
+        else:
+            color_map.append("red")
+
+    for edges in G.edges:
+        if(edges[0] in solusi_idx and (edges[1] in solusi_idx) ):
+            edge_colors.append("green")
+        else:
+            edge_colors.append("red")
+
+    layout = nx.spring_layout(G)
+    nx.draw(G, layout, node_size=1000, node_color = color_map, edge_color = edge_colors, labels=mylabels, with_labels=True, arrows=False)
+    jarak = nx.get_edge_attributes(G, "weight")
+    nx.draw_networkx_edge_labels(G, pos=layout, edge_labels=jarak)
+    plt.show()
+
+# -----MAIN------
 
 From = input(str("Asal:"))
 To = input(str("Tujuan:"))
-AStar(g2, From, To)
+solusi = AStar(g2, From, To)
+solusi2, gScore = AStarV2(g2, From, To)
 
-print("KODE VERSI 2")
-print()
-print()
-def isInPrioQueue(prioQueue, node):
-    for item in prioQueue.queue:
-        if(item[1] == node):
-            return True
-    return False
-openSet = queue.PriorityQueue()
-path = []
 
-# titikA = nodeCoordinate[g2.nodes.index("A")]
-# titikB = nodeCoordinate[g2.nodes.index("B")]
-# titikC = nodeCoordinate[g2.nodes.index("C")]
-# titikD = nodeCoordinate[g2.nodes.index("D")]
-# titikE = nodeCoordinate[g2.nodes.index("E")]
-
-idxFrom = g2.nodes.index(From)
-idxTo = g2.nodes.index(To)
-
-f2 = 0 + haversin(nodeCoordinate[idxFrom], nodeCoordinate[idxTo])
-openSet.put((f2, From))
-
-# // For node n, gScore[n] is the cost of the cheapest path from start to n currently known.
-gScore = []
-
-# // For node n, fScore[n] := gScore[n] + h(n). fScore[n] represents our current best guess as to
-# // how short a path from start to finish can be if it goes through n.
-fScore = []
-cameFrom = []
-
-for node in g2.nodes:
-    if (node==From):
-        gScore.append(0)
-        fScore.append(haversin(nodeCoordinate[idxFrom], nodeCoordinate[idxTo]))
-    else:
-        gScore.append(999)
-        fScore.append(999)
-    cameFrom.append("")
-
-g2.print_graph()
-while (not openSet.empty()):
-    print("Kondisi PrioQueue: ", end ="")
-    print(openSet.queue)
-    current = openSet.get()
-    currentIdx = g2.nodes.index(current[1])
-    print("Current Node:" + g2.nodes[currentIdx])
-    if(current[1] == To):
-        print("DONE")
-        break
-    print()
-    # Foreach neighbour of current
-    # neighbour is every node that connected with current node
-    # with weight > 0
-    for i in range(nNodes):
-        if (g2.adj_matrix[currentIdx][i] > 0):
-            #  tentative_gScore is the distance from start to the neighbor through current
-            # d jarak dari node current ke tetangganya (weigthnya)
-            d = g2.adj_matrix[currentIdx][i]
-            tentative_gScore = gScore[currentIdx] + d
-            
-            # kalau kita mengunjungi node yang sama dua kali, kita cek apakah gScore node ini
-            # lebih pendek jika dibandingkan dengan tentative_gscore, yaitu dikunjungi melalui node lain
-        
-            if (tentative_gScore < gScore[i]):
-                cameFrom[i] = current[1]
-                gScore[i] = tentative_gScore
-                titikNeighbour = nodeCoordinate[i]
-                hn = haversin(titikNeighbour, nodeCoordinate[idxTo])
-                fScore[i] = gScore[i] + hn
-
-                if not (isInPrioQueue(openSet, g2.nodes[i])):
-                    openSet.put((fScore[i], g2.nodes[i]))
 
 for i in range(5):
     print(haversin(nodeCoordinate[i], nodeCoordinate[4]))
 
-print(openSet.queue)
-# Ini tinggal di traceback gitu
-print("Tinggal di-traceback dari node tujuan ke awal")
-print(cameFrom)
+print("Solusi A* V1: ", solusi)
 
-print("Jarak : " , gScore[idxTo])
+print("Solusi A* V2: ", solusi2)
+print("Jarak tempuh: ", gScore[g2.nodes.index(To)])
+
+visualize_graph(g2, solusi)
