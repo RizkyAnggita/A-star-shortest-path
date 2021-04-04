@@ -13,7 +13,7 @@ from folium import plugins
 # Install matplotlib -> pip3 install matplotlib
 # Install networkx -> pip3 install networkx
 # Install decorator v4.4.2 -> pip install decorator==4.4.2
-#  
+# Install folium -> pip install folium
 class Graph():
     def __init__(self, nNodes):
         self.nodes = []
@@ -45,9 +45,9 @@ class Graph():
         self.print_node()
         for i in range (nNodes):
             for j in range (nNodes):
-                if(j==0):
-                    print(self.nodes[i], end=" ")
-                print(self.adj_matrix[i][j], end=" ")
+                #if(j==0):
+                #    print(self.nodes[i], end=" ")
+                print(self.adj_matrix[i][j], end=" \t")
             print()
 
 def add_graph_from_txt(g, nodeCoordinate, file):
@@ -310,7 +310,7 @@ def visualize_graph(g2, solusi):
     plt.show()
 
 # -----MAIN------
-
+g2.print_graph()
 From = input(str("Asal:"))
 To = input(str("Tujuan:"))
 #solusi = AStar(g2, From, To)
