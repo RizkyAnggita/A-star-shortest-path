@@ -5,6 +5,9 @@ from queue import PriorityQueue
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
+import folium
+from folium import plugins
+
 
 # Install numpy -> pip3 install numpy
 # Install matplotlib -> pip3 install matplotlib
@@ -85,8 +88,8 @@ def euclidean_dist(pointA, pointB):
     return math.sqrt(xKuad + yKuad)
 
 
-# filename = input("Masukkan nama file: ")
-filename = "BuahBatu.txt"
+filename = input(str("Masukkan nama file: "))
+filename = filename+".txt"
 a = os.path.abspath(os.curdir)
 
 
@@ -104,7 +107,11 @@ g2 = Graph(nNodes)
 nodeCoordinate = add_graph_from_txt(g2, nodeCoordinate, f)
 
 
-#Hn Gn nya belom, prionya masih 0 semua ini
+def SearchIdxNode(N, g):
+        for i in range(len(g.nodes)):
+            if (N == g.nodes[i]):
+                return i
+'''
 def AStar (g, From, To):
     #untuk mendapat yang belom ditelusuri
     def getAdjUnvisited(visitedVertices):
@@ -142,41 +149,38 @@ def AStar (g, From, To):
     Pembangkit = [0 for i in range (len(g.nodes))]
     while(not q.empty() and not pathFound):
         #dequeue yang ditelusuri
-        print("LOOP BESAR")
         temp = q.get()
         currNode = temp[1].split('-')
-        print("temp[1]:",temp[1])
-        #print(currNode[-1])
+        #print("temp[1]:",temp[1])
         From = str(currNode[-1])
         idxFrom = SearchIdxNode(From)
-        print(currNode)
+        #print(currNode)
+
         #G(n) : jarak yang telah ditempuh sampai ke simpul tersebut
         Gn = 0
         for i in range(len(currNode)-1):
             a = SearchIdxNode(currNode[i])
             b = SearchIdxNode(currNode[i+1])
             Gn += g.adj_matrix[a][b]
-        print("G(n):",Gn)
+        #print("G(n):",Gn)
         #H(n) : jarak garis lurus titik sekarang ke tujuan
         Hn = haversin(nodeCoordinate[SearchIdxNode(currNode[-1])], nodeCoordinate[SearchIdxNode(To)])
-        print("H(n):",Hn)
+        #print("H(n):",Hn)
 
         Fn = Gn + Hn
-        print("F(n):", Fn)
+        #print("F(n):", Fn)
 
         visitedVertices = newVisitedVertices()
-        print(visitedVertices)
+        #print(visitedVertices)
 
         idxUnv = getAdjUnvisited(visitedVertices)
-        print("Indeks:", idxUnv)
+        #print("Indeks:", idxUnv)
         
         if (getAdjUnvisited(visitedVertices) != -1):
             q.put((Fn, temp[1]+'-'+(g.nodes[idxUnv])))
             visitedVertices[idxUnv] = True
             Pembangkit[idxUnv] = True
             if(SearchIdxNode(currNode[-1]) == idxTo):
-                print("KETEMU")
-                #print(q.get())
                 pathFound = True
         while(idxUnv != -1 and not pathFound):
             idxUnv = getAdjUnvisited(visitedVertices)
@@ -185,10 +189,9 @@ def AStar (g, From, To):
                 visitedVertices[idxUnv] = True
                 Pembangkit[idxUnv] = True
                 if(SearchIdxNode(currNode[-1]) == idxTo):
-                    print(q.get())
-                    print("KETEMUBWAH")
                     pathFound = True
     return (currNode)
+'''
 
 def AStarV2(g, From, To):
     def construct_path(cameFrom, From, To, g):
@@ -310,7 +313,7 @@ def visualize_graph(g2, solusi):
 
 From = input(str("Asal:"))
 To = input(str("Tujuan:"))
-solusi = AStar(g2, From, To)
+#solusi = AStar(g2, From, To)
 solusi2, gScore = AStarV2(g2, From, To)
 
 
@@ -318,9 +321,41 @@ solusi2, gScore = AStarV2(g2, From, To)
 for i in range(5):
     print(haversin(nodeCoordinate[i], nodeCoordinate[4]))
 
-print("Solusi A* V1: ", solusi)
+#print("Solusi A* V1: ", solusi)
 
 print("Solusi A* V2: ", solusi2)
 print("Jarak tempuh: ", gScore[g2.nodes.index(To)])
 
-visualize_graph(g2, solusi)
+visualize_graph(g2, solusi2)
+
+#Koordinat lokasi dari file eksternal
+coordinates = []  
+for i in (nodeCoordinate):
+    coordinates.append(i)
+
+name = []
+for i in (g2.nodes):
+    name.append(i)
+
+latitude = []
+longitude = []
+for i in range(len(coordinates)):
+    latitude.append(coordinates[i][0])
+    longitude.append(coordinates[i][1])
+
+#Koordinat jalur shortest path
+mapHasil = []
+for i in range (len(solusi2)):
+    mapHasil.append(nodeCoordinate[SearchIdxNode(solusi2[i], g2)])
+      
+
+visualisasiMap = folium.Map(location=coordinates[0], zoom_start=16)
+for index,lat in enumerate(latitude):
+    folium.Marker([lat,
+    longitude[index]],
+    popup=('{} \n'.format(name[index])),
+    icon = folium.Icon(color='blue'), tooltip=name[index]).add_to(visualisasiMap)
+    #Buat Ant Path dari jalur yang ditempuh
+    plugins.AntPath(locations=mapHasil,weight=5, color = "green").add_to(visualisasiMap)
+visualisasiMap
+
