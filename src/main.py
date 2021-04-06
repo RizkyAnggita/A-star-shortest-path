@@ -53,7 +53,12 @@ found, solusi, gn = g2.AStar(From, To, nodeCoordinate)
 if not found:
     print("Lintasan tidak dapat ditemukan!")
 else:
-    print("Solusi A*: ", solusi)
+    print("Solusi A*: ", end = "")
+    for i in range (len(solusi)):
+        if (i != len(solusi) - 1):
+            print(solusi[i], end = " → ")
+        else:
+            print(solusi[i])
     print("Jarak tempuh: ", gn[g2.nodes.index(To)], " meter")
     g2.visualize_graph(solusi)
 
