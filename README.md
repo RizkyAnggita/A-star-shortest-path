@@ -38,6 +38,7 @@ Python 3.x
 Numpy 1.20.2
 Matplotlib 3.4.1
 Networkx 2.5
+Folium 0.12.1
 Jupyter Notebook (or use Jupyter Extension in VSCode)
 ```
 Install Dependencies <br>
@@ -63,6 +64,11 @@ Link: https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter
 3. Install all dependencies needed on the Dependencies section before.
 4. Program is ready to run
 
+## How to run
+1. Run the main.py or main.ipynb.
+2. The program will ask for input of file name. You can find the name in test folder. Then type the name without the format (Ex: London not London.txt)
+3. If you run the .py version, a new window will popup and show the visualized graph. If you run the .ipynb version, the cell will output the visualized graph AND the visualized shortest route on the real world map.
+4. Done
 
 ## Features
 * Read a txt file (format like in test folder), and make a Graph with adjacency weigted matrix from it.
