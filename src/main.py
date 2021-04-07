@@ -62,38 +62,38 @@ else:
     print("Jarak tempuh: ", gn[g2.nodes.index(To)], " meter")
     g2.visualize_graph(solusi)
 
-# Visualizing route with Folium
-# Use the Jupyter Notebook version of this program to see this
+    # Visualizing route with Folium
+    # Use the Jupyter Notebook version of this program to see this
 
-#Koordinat lokasi dari file eksternal
-coordinates = []  
-for i in (nodeCoordinate):
-    coordinates.append(i)
+    #Koordinat lokasi dari file eksternal
+    coordinates = []  
+    for i in (nodeCoordinate):
+        coordinates.append(i)
 
-name = []
-for i in (g2.nodes):
-    name.append(i)
+    name = []
+    for i in (g2.nodes):
+        name.append(i)
 
-latitude = []
-longitude = []
-for i in range(len(coordinates)):
-    latitude.append(coordinates[i][0])
-    longitude.append(coordinates[i][1])
+    latitude = []
+    longitude = []
+    for i in range(len(coordinates)):
+        latitude.append(coordinates[i][0])
+        longitude.append(coordinates[i][1])
 
-#Koordinat jalur shortest path
-mapHasil = []
-for i in range (len(solusi)):
-    mapHasil.append(nodeCoordinate[SearchIdxNode(solusi[i], g2)])
-      
+    #Koordinat jalur shortest path
+    mapHasil = []
+    for i in range (len(solusi)):
+        mapHasil.append(nodeCoordinate[SearchIdxNode(solusi[i], g2)])
+        
 
-visualisasiMap = folium.Map(location=coordinates[0], zoom_start=16)
-for index,lat in enumerate(latitude):
-    folium.Marker([lat,
-    longitude[index]],
-    popup=('{} \n'.format(name[index])),
-    icon = folium.Icon(color='blue'), tooltip=name[index]).add_to(visualisasiMap)
-    #Buat Ant Path dari jalur yang ditempuh
-    plugins.AntPath(locations=mapHasil,weight=5, color = "green").add_to(visualisasiMap)
-#Menampilkan visualisasi peta pada jupyter notebook, ada animasi jalannya :)
-visualisasiMap
+    visualisasiMap = folium.Map(location=coordinates[0], zoom_start=16)
+    for index,lat in enumerate(latitude):
+        folium.Marker([lat,
+        longitude[index]],
+        popup=('{} \n'.format(name[index])),
+        icon = folium.Icon(color='blue'), tooltip=name[index]).add_to(visualisasiMap)
+        #Buat Ant Path dari jalur yang ditempuh
+        plugins.AntPath(locations=mapHasil,weight=5, color = "green").add_to(visualisasiMap)
+    #Menampilkan visualisasi peta pada jupyter notebook, ada animasi jalannya :)
+    visualisasiMap
 
