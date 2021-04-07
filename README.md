@@ -73,6 +73,6 @@ Link: https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter
 ## Author
 Created by :
 - Rizky Anggita S Siregar (13519132)
-- Wilson Tandya (13519228) <br>
+- Wilson Tandya (13519209) <br>
 Institut Teknologi Bandung <br>
 2021
