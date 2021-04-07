@@ -7,6 +7,7 @@
 * [Screenshots](#screenshots)
 * [Dependencies](#dependencies)
 * [Setup](#setup)
+* [How to run](#how-to-run)
 * [Features](#features)
 * [Author](#author)
 
@@ -65,10 +66,12 @@ Link: https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter
 4. Program is ready to run
 
 ## How to run
-1. Run the main.py or main.ipynb.
-2. The program will ask for input of file name. You can find the name in test folder. Then type the name without the format (Ex: London not London.txt)
-3. If you run the .py version, a new window will popup and show the visualized graph. If you run the .ipynb version, the cell will output the visualized graph AND the visualized shortest route on the real world map.
-4. Done
+1. Clone this repo into your local directory.
+2. Make sure all the dependencies is fulfilled.
+3. Run the `main.py` or `main.ipynb`.
+4. The program will ask for input of file name. You can find the name in test folder. Then type the name without the format (Ex: London not London.txt).
+5. If you run the .py version, a new window will popup and show the visualized graph. If you run the .ipynb version, the cell will output the visualized graph AND the visualized shortest route on the real world map.
+6. Done
 
 ## Features
 * Read a txt file (format like in test folder), and make a Graph with adjacency weigted matrix from it.
