@@ -53,12 +53,18 @@ found, solusi, gn = g2.AStar(From, To, nodeCoordinate)
 if not found:
     print("Lintasan tidak dapat ditemukan!")
 else:
-    print("Solusi A*: ", solusi)
-    print("Jarak tempuh: ", gn[g2.nodes.index(To)])
+    print("Solusi A*: ", end = "")
+    for i in range (len(solusi)):
+        if (i != len(solusi) - 1):
+            print(solusi[i], end = " → ")
+        else:
+            print(solusi[i])
+    print("Jarak tempuh: ", gn[g2.nodes.index(To)], " meter")
     g2.visualize_graph(solusi)
 
 # Visualizing route with Folium
-# Use the Jupiter Notebook version of this program to see this
+# Use the Jupyter Notebook version of this program to see this
+
 #Koordinat lokasi dari file eksternal
 coordinates = []  
 for i in (nodeCoordinate):
@@ -88,5 +94,6 @@ for index,lat in enumerate(latitude):
     icon = folium.Icon(color='blue'), tooltip=name[index]).add_to(visualisasiMap)
     #Buat Ant Path dari jalur yang ditempuh
     plugins.AntPath(locations=mapHasil,weight=5, color = "green").add_to(visualisasiMap)
+#Menampilkan visualisasi peta pada jupyter notebook, ada animasi jalannya :)
 visualisasiMap
 
