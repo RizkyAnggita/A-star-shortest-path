@@ -7,7 +7,7 @@ from Utility import add_graph_from_txt, SearchIdxNode
 # A* Algorithm for Shortest Path Finding
 # Author    :
 #               Rizky Anggita S Siregar - 13519132
-#               Wilson Tandya           - 13519228
+#               Wilson Tandya           - 13519209
 # Date      :   04-03-2021
 
 
