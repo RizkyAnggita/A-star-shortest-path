@@ -89,13 +89,14 @@ class Graph():
                 fn.append(99999)
             cameFrom.append("")
 
-        while (not openSet.empty() and not found):
+        while (not openSet.empty()):
             current = openSet.get()
             currentIdx = self.nodes.index(current[1])
-
+            
             if(current[1] == To):
                 print("FOUND\n")
                 found = True
+                break
             
             # Foreach neighbour of current
             # neighbour is every node that connected with current node
@@ -119,10 +120,10 @@ class Graph():
 
                         if not (isInPrioQueue(openSet, self.nodes[i])):
                             openSet.put((fn[i], self.nodes[i]))
-        if found:               
+        if not openSet.empty():               
             return True, construct_path(cameFrom, From, To, self), gn
         else:
-            return False, construct_path(cameFrom, From, To, self), gn
+            return False, False, False
 
     def visualize_graph(self, solusi):
         g2 = self
